@@ -1,4 +1,14 @@
 import streamlit as st
+import pandas as pd
+from PIL import Image
+
+st.markdown("[Visita mi canal de YouTube](https://www.youtube.com/@AutoIngenium-fj8ss)")
+
+# Carga y muestra el logotipo
+image = Image.open("mi_logotipo.png")
+st.image(image, caption="AUTOINGENIUM", use_column_width=True)
+
+st.markdown("[VIDEO TUTORIAL](https://www.youtube.com/watch?v=gLxunTcgm1I)")
 
 # Constantes por defecto para el Tesla Model 3
 DEFAULT_CD = 0.22  # Coeficiente de resistencia aerodinámica
