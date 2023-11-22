@@ -17,7 +17,7 @@ area_frontal = st.number_input('Área frontal del vehículo (en m²):', min_valu
 velocidad_ms = velocidad_kmh / 3.6
 
 # Cálculo de la potencia necesaria en vatios
-potencia_w = 0.5 * DENSIDAD_AIRE * area_frontal * coeficiente_drag * velocidad_ms**3
+potencia_w = 0.5 * DENSIDAD_AIRE * area_frontal * coeficiente_drag * velocidad_ms**2
 potencia_kw = potencia_w / 1000  # Conversión de vatios a kilovatios
 
 # Muestra la potencia necesaria para superar la resistencia del aire
