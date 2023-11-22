@@ -1,7 +1,7 @@
 import streamlit as st
 
 # Define los valores por defecto para el Tesla Model 3
-DEFAULT_COEFICIENTE_DRAG = 0.23
+DEFAULT_COEFICIENTE_DRAG = 0.22
 DEFAULT_AREA_FRONTAL = 2.2
 DENSIDAD_AIRE = 1.225  # en kg/m^3
 
