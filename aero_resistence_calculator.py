@@ -1,25 +1,35 @@
 import streamlit as st
 
-# Define los valores por defecto para el Tesla Model 3
-DEFAULT_COEFICIENTE_DRAG = 0.22
-DEFAULT_AREA_FRONTAL = 2.2
-DENSIDAD_AIRE = 1.2  # en kg/m^3
+# Constantes por defecto para el Tesla Model 3
+DEFAULT_CD = 0.23  # Coeficiente de resistencia aerodinámica
+DEFAULT_AF = 2.2   # Área frontal en m^2
+DENSIDAD_AIRE = 1.225  # Densidad del aire en kg/m^3
 
-# Título de la calculadora
-st.title('Calculadora de consumo de energía debido a la resistencia aerodinámica')
+# Función para calcular la potencia necesaria para superar la resistencia del aire
+def calcular_potencia(cd, af, velocidad):
+    velocidad_ms = velocidad / 3.6  # Convertir km/h a m/s
+    potencia = 0.5 * DENSIDAD_AIRE * af * cd * velocidad_ms**3
+    return potencia / 1000  # Convertir W a kW
+
+# Función para calcular el consumo en kWh cada 100 km
+def calcular_consumo(potencia, velocidad):
+    horas = 100 / velocidad  # Tiempo para recorrer 100 km
+    consumo = potencia * horas  # Consumo en kWh
+    return consumo
+
+# Título de la aplicación en Streamlit
+st.title('Calculadora de Consumo de Energía por Resistencia Aerodinámica')
 
 # Entradas del usuario
-velocidad_kmh = st.number_input('Introduzca la velocidad en km/h:', min_value=0.0, value=120.0)
-coeficiente_drag = st.number_input('Coeficiente aerodinámico del vehículo:', min_value=0.0, value=DEFAULT_COEFICIENTE_DRAG)
-area_frontal = st.number_input('Área frontal del vehículo (en m²):', min_value=0.0, value=DEFAULT_AREA_FRONTAL)
+cd_input = st.number_input('Coeficiente de resistencia aerodinámica (Cd)', value=DEFAULT_CD)
+af_input = st.number_input('Área frontal (m^2)', value=DEFAULT_AF)
+velocidad_input = st.number_input('Velocidad (km/h)', min_value=1.0, value=120.0)
 
-# Conversión de velocidad a m/s
-velocidad_ms = velocidad_kmh / 3.6
+# Calculando la potencia y el consumo
+potencia = calcular_potencia(cd_input, af_input, velocidad_input)
+consumo = calcular_consumo(potencia, velocidad_input)
 
-# Cálculo de la potencia necesaria en vatios
-potencia_w = 0.5 * DENSIDAD_AIRE * area_frontal * coeficiente_drag * velocidad_ms**3
-potencia_kw = potencia_w / 1000  # Conversión de vatios a kilovatios
-
-# Muestra la potencia necesaria para superar la resistencia del aire
-st.write(f'La potencia necesaria para superar la resistencia aerodinámica a {velocidad_kmh} km/h es: {potencia_kw:.2f} kW')
+# Mostrar la potencia y el consumo
+st.write(f"Potencia necesaria a {velocidad_input} km/h: {potencia:.2f} kW")
+st.write(f"Consumo de energía cada 100 km debido a la resistencia aerodinámica: {consumo:.2f} kWh")
 
