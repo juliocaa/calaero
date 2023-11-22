@@ -1,7 +1,7 @@
 import streamlit as st
 
 # Constantes por defecto para el Tesla Model 3
-DEFAULT_CD = 0.23  # Coeficiente de resistencia aerodinámica
+DEFAULT_CD = 0.22  # Coeficiente de resistencia aerodinámica
 DEFAULT_AF = 2.2   # Área frontal en m^2
 DENSIDAD_AIRE = 1.225  # Densidad del aire en kg/m^3
 
