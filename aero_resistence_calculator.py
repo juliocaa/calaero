@@ -25,27 +25,20 @@ def aerodynamic_consumption(cx, frontal_area, speed_kmh):
     consumption_kwh_per_100km = (power_w * (100 / speed_kmh)) / 1000
     return consumption_kwh_per_100km
 
-# Function to calculate the consumption based on temperature
+# Corrected function to calculate the consumption based on temperature
 def temperature_based_consumption(temperature):
     # Base consumption at 20°C is 5.5 kWh/100km
     base_consumption = 5.5
-    # Adjust consumption based on temperature
-    if temperature != 20:
-        efficiency_change = 0.3 * (1 - abs(temperature - 20) / 20)
-        consumption = base_consumption / (1 - efficiency_change)
-    else:
-        consumption = base_consumption
+    # Consumption increases or decreases linearly, with a 30% change at 0°C and 40°C
+    temperature_efficiency_change = 0.3 * abs(temperature - 20) / 20
+    consumption = base_consumption * (1 + temperature_efficiency_change)
     return consumption
 
 # Function to calculate the influence of the climate control
 def climate_control_influence(temperature, use_climate_control):
     # No influence at 20°C, linear increase/decrease outside this temperature
-    # At 6°C or 34°C (20±14), the influence is 0.7kWh/100km
     if use_climate_control:
-        if temperature != 20:
-            influence = 0.7 * abs(temperature - 20) / 14
-        else:
-            influence = 0
+        influence = 0 if temperature == 20 else 0.7 * abs(temperature - 20) / 14
     else:
         influence = 0
     return influence
@@ -82,4 +75,5 @@ def electric_car_consumption_app():
 # Run the app function
 if __name__ == "__main__":
     electric_car_consumption_app()
+
 
