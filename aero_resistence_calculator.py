@@ -27,30 +27,29 @@ def aerodynamic_consumption(cx, frontal_area, speed_kmh):
 
 # Function to calculate the consumption based on temperature
 def temperature_based_consumption(temperature):
-    # Base consumption at 20°C is 5.5 kWh/100km
-    base_consumption = 5.5
-    # Maximum consumption at 0°C or 40°C is 30% more
-    max_consumption = base_consumption * 1.3
-    # Calculate the consumption increase per degree
-    consumption_increase_per_degree = (max_consumption - base_consumption) / 20
-    # Calculate the difference from the optimal temperature
-    temperature_difference = abs(temperature - 20)
-    # Adjust consumption based on temperature
-    consumption = base_consumption + (consumption_increase_per_degree * temperature_difference)
-    return consumption
+    # Base consumption at 20°C is 5.8 kWh/100km
+    optimal_consumption = 5.8
+    # Calculate the increase or decrease in consumption per degree from 20°C
+    consumption_change_per_degree = (8.12 - 5.8) / 20
+    # Calculate the temperature effect
+    temperature_effect = abs(temperature - 20) * consumption_change_per_degree
+    # Total consumption adjusted for temperature
+    if temperature > 20:
+        return optimal_consumption + temperature_effect
+    else:
+        return optimal_consumption + temperature_effect
 
 # Function to calculate the influence of the climate control
 def climate_control_influence(temperature, use_climate_control):
-    if use_climate_control:
-        # Calculate the consumption increase per 6 degrees
-        consumption_increase_per_6_degrees = 0.7
-        # Calculate the difference from the optimal temperature
-        temperature_difference = abs(temperature - 20)
-        # Calculate influence of climate control per degree
-        influence = (temperature_difference / 6) * consumption_increase_per_6_degrees
+    # No influence at 20°C, linear increase/decrease outside this temperature
+    if not use_climate_control:
+        return 0
     else:
-        influence = 0
-    return influence
+        # Influence is 0 at 20°C and changes linearly away from 20°C
+        influence_per_6_degrees = 0.7
+        degrees_difference = abs(temperature - 20)
+        influence = (degrees_difference / 6) * influence_per_6_degrees
+        return influence
 
 # Streamlit app
 def electric_car_consumption_app():
@@ -79,7 +78,8 @@ def electric_car_consumption_app():
         st.write(f'Aerodynamic Consumption: {aero_consumption:.2f} kWh/100km')
         st.write(f'Temperature-based Consumption: {temp_consumption:.2f} kWh/100km')
         st.write(f'Climate Control Influence: {climate_consumption:.2f} kWh/100km')
-        st.write(f'Total Consumption: {total_consumption:.2f} kWh/100km')
+        st.write(f'Total Consumption: {total_consumption:.2f} kWh/ &#8203;``【oaicite:0】``&#8203;
+
 
 # Run the app function
 if __name__ == "__main__":
