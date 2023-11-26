@@ -76,5 +76,3 @@ def electric_car_consumption_app():
 # Run the app function
 if __name__ == "__main__":
     electric_car_consumption_app()
-
-
