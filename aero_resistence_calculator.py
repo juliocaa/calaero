@@ -25,20 +25,29 @@ def aerodynamic_consumption(cx, frontal_area, speed_kmh):
     consumption_kwh_per_100km = (power_w * (100 / speed_kmh)) / 1000
     return consumption_kwh_per_100km
 
-# Corrected function to calculate the consumption based on temperature
+# Function to calculate the consumption based on temperature
 def temperature_based_consumption(temperature):
     # Base consumption at 20°C is 5.5 kWh/100km
     base_consumption = 5.5
-    # Consumption increases or decreases linearly, with a 30% change at 0°C and 40°C
-    temperature_efficiency_change = 0.3 * abs(temperature - 20) / 20
-    consumption = base_consumption * (1 + temperature_efficiency_change)
+    # Maximum consumption at 0°C or 40°C is 30% more
+    max_consumption = base_consumption * 1.3
+    # Calculate the consumption increase per degree
+    consumption_increase_per_degree = (max_consumption - base_consumption) / 20
+    # Calculate the difference from the optimal temperature
+    temperature_difference = abs(temperature - 20)
+    # Adjust consumption based on temperature
+    consumption = base_consumption + (consumption_increase_per_degree * temperature_difference)
     return consumption
 
 # Function to calculate the influence of the climate control
 def climate_control_influence(temperature, use_climate_control):
-    # No influence at 20°C, linear increase/decrease outside this temperature
     if use_climate_control:
-        influence = 0 if temperature == 20 else 0.7 * abs(temperature - 20) / 14
+        # Calculate the consumption increase per 6 degrees
+        consumption_increase_per_6_degrees = 0.7
+        # Calculate the difference from the optimal temperature
+        temperature_difference = abs(temperature - 20)
+        # Calculate influence of climate control per degree
+        influence = (temperature_difference / 6) * consumption_increase_per_6_degrees
     else:
         influence = 0
     return influence
@@ -75,5 +84,3 @@ def electric_car_consumption_app():
 # Run the app function
 if __name__ == "__main__":
     electric_car_consumption_app()
-
-
