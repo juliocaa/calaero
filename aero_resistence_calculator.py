@@ -17,39 +17,38 @@ rho = 1.225  # Air density in kg/m³
 
 # Function to calculate the aerodynamic consumption
 def aerodynamic_consumption(cx, frontal_area, speed_kmh):
-    # Convert speed from km/h to m/s for the formula
-    speed_ms = speed_kmh / 3.6
-    # Aerodynamic power in W
-    power_w = 0.5 * rho * speed_ms**3 * frontal_area * cx
-    # Convert power to kWh and then to kWh/100km
-    consumption_kwh_per_100km = (power_w * (100 / speed_kmh)) / 1000
+    speed_ms = speed_kmh / 3.6  # Convert speed from km/h to m/s
+    power_w = 0.5 * rho * speed_ms**3 * frontal_area * cx  # Power in watts
+    consumption_kwh_per_100km = (power_w * (100 / speed_kmh)) / 1000  # Convert W to kW and calculate consumption per 100km
     return consumption_kwh_per_100km
 
 # Function to calculate the consumption based on temperature
 def temperature_based_consumption(temperature):
-    # Base consumption at 20°C is 5.8 kWh/100km
-    optimal_consumption = 5.8
-    # Calculate the increase or decrease in consumption per degree from 20°C
-    consumption_change_per_degree = (8.12 - 5.8) / 20
-    # Calculate the temperature effect
-    temperature_effect = abs(temperature - 20) * consumption_change_per_degree
-    # Total consumption adjusted for temperature
-    if temperature > 20:
-        return optimal_consumption + temperature_effect
+    optimal_temperature = 20.0  # Optimal temperature in °C
+    base_consumption = 5.8  # Base consumption at optimal temperature in kWh/100km
+    temperature_factor = 1.4  # Max factor at 0°C or 40°C (40% more consumption)
+    
+    # Calculate the variation factor based on the temperature difference from the optimal
+    variation_factor = abs(temperature - optimal_temperature) / 20.0
+    if temperature < optimal_temperature:
+        # Consumption increases as temperature decreases from the optimal
+        consumption = base_consumption * (1 + (temperature_factor - 1) * variation_factor)
     else:
-        return optimal_consumption + temperature_effect
+        # Consumption increases as temperature increases from the optimal
+        consumption = base_consumption * (1 + (temperature_factor - 1) * variation_factor)
+    
+    return consumption
 
 # Function to calculate the influence of the climate control
 def climate_control_influence(temperature, use_climate_control):
-    # No influence at 20°C, linear increase/decrease outside this temperature
-    if not use_climate_control:
-        return 0
+    optimal_temperature = 20.0  # Optimal temperature in °C
+    if use_climate_control:
+        # Calculate the additional consumption based on the temperature difference from the optimal
+        additional_consumption = 0.7 * abs(temperature - optimal_temperature) / 6.0
     else:
-        # Influence is 0 at 20°C and changes linearly away from 20°C
-        influence_per_6_degrees = 0.7
-        degrees_difference = abs(temperature - 20)
-        influence = (degrees_difference / 6) * influence_per_6_degrees
-        return influence
+        additional_consumption = 0.0
+    
+    return additional_consumption
 
 # Streamlit app
 def electric_car_consumption_app():
@@ -78,8 +77,7 @@ def electric_car_consumption_app():
         st.write(f'Aerodynamic Consumption: {aero_consumption:.2f} kWh/100km')
         st.write(f'Temperature-based Consumption: {temp_consumption:.2f} kWh/100km')
         st.write(f'Climate Control Influence: {climate_consumption:.2f} kWh/100km')
-        st.write(f'Total Consumption: {total_consumption:.2f} kWh/ &#8203;``【oaicite:0】``&#8203;
-
+        st.write(f'Total Consumption: {total_consumption:.2f} kWh/100km')
 
 # Run the app function
 if __name__ == "__main__":
