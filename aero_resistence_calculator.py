@@ -31,18 +31,22 @@ def aerodynamic_consumption(cx, frontal_area, speed_kmh, temperature):
 # Function to calculate the base consumption based on temperature
 def base_consumption(temperature):
     # Base consumption at 20°C is 5.5 kWh/100km
-    consumption = 5.5
+    base_consumption = 5.5
     # Adjust for temperature
     temp_factor = 1 + 0.3 * (abs(temperature - 20) / 20)
-    consumption *= temp_factor
-    return consumption
+    temperature_consumption = base_consumption * temp_factor
+    return temperature_consumption
 
 # Function to calculate the influence of the climate control
 def climate_control_influence(temperature):
-    # Climate control consumption at 20°C is 0 kWh/100km
-    # Adjust for temperature: 0.7 kWh/100km for every 6 degrees of deviation from 20°C
-    consumption_climate_control = (abs(temperature - 20) / 6) * 0.7
-    return consumption_climate_control
+    # Influence is 0 at 20°C, linear increase/decrease outside this temperature
+    # At every 6°C deviation from 20°C, the influence is 0.7kWh/100km
+    if temperature == 20:
+        return 0
+    else:
+        climate_control_consumption_per_degree = 0.7 / 6  # kWh/100km per degree from 20°C
+        temperature_difference = abs(temperature - 20)
+        return climate_control_consumption_per_degree * temperature_difference
 
 # Streamlit app
 def electric_car_consumption_app():
@@ -76,4 +80,5 @@ def electric_car_consumption_app():
 # Run the app function
 if __name__ == "__main__":
     electric_car_consumption_app()
+
 
