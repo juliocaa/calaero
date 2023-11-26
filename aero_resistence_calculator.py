@@ -42,9 +42,12 @@ def temperature_based_consumption(temperature):
 # Function to calculate the influence of the climate control
 def climate_control_influence(temperature, use_climate_control):
     optimal_temperature = 20.0  # Optimal temperature in °C
+    increment_per_6_degrees = 0.7  # kWh increase per 6 degrees difference
+
     if use_climate_control:
         # Calculate the additional consumption based on the temperature difference from the optimal
-        additional_consumption = 0.7 * abs(temperature - optimal_temperature) / 6.0
+        degrees_difference = abs(temperature - optimal_temperature)
+        additional_consumption = (degrees_difference / 6.0) * increment_per_6_degrees
     else:
         additional_consumption = 0.0
     
