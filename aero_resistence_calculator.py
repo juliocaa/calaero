@@ -10,6 +10,8 @@ st.image(image, caption="AUTOINGENIUM", use_column_width=True)
 
 st.markdown("[VIDEO TUTORIAL](https://www.youtube.com/watch?v=gLxunTcgm1I)")
 
+import streamlit as st
+
 # Constants for air density
 rho = 1.225  # Air density in kg/m³
 
@@ -53,10 +55,10 @@ def electric_car_consumption_app():
     st.title('Electric Car Consumption Calculator')
 
     # Input fields with default values
-    cx = st.number_input('Drag Coefficient (Cx)', value=0.22)
-    frontal_area = st.number_input('Frontal Area (m²)', value=2.22)
-    temperature = st.number_input('Outside Temperature (°C)', value=20)
-    speed = st.number_input('Speed (km/h)', value=100)
+    cx = st.number_input('Drag Coefficient (Cx)', min_value=0.0, max_value=1.0, value=0.22, step=0.01)
+    frontal_area = st.number_input('Frontal Area (m²)', min_value=0.0, max_value=10.0, value=2.22, step=0.01)
+    temperature = st.number_input('Outside Temperature (°C)', min_value=-50.0, max_value=50.0, value=20.0, step=0.1)
+    speed = st.number_input('Speed (km/h)', min_value=0.0, max_value=300.0, value=100.0, step=1.0)
     use_climate_control = st.checkbox('Consider Climate Control', value=False)
 
     # Calculate button
@@ -78,4 +80,6 @@ def electric_car_consumption_app():
         st.write(f'Total Consumption: {total_consumption:.2f} kWh/100km')
 
 # Run the app function
-electric_car_consumption_app()
+if __name__ == "__main__":
+    electric_car_consumption_app()
+
