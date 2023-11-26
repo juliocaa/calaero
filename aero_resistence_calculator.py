@@ -43,15 +43,19 @@ def temperature_based_consumption(temperature):
 def climate_control_influence(temperature, use_climate_control):
     optimal_temperature = 20.0  # Optimal temperature in °C
     increment_per_6_degrees = 0.7  # kWh increase per 6 degrees difference
-
+    
     if use_climate_control:
         # Calculate the additional consumption based on the temperature difference from the optimal
-        degrees_difference = abs(temperature - optimal_temperature)
-        additional_consumption = (degrees_difference / 6.0) * increment_per_6_degrees
+        # It increments 0.7 kWh for each 6 degrees below or above 20°C.
+        temperature_difference = abs(temperature - optimal_temperature)
+        # Calculate how many 6-degree increments are in the temperature difference
+        six_degree_steps = temperature_difference / 6.0
+        additional_consumption = six_degree_steps * increment_per_6_degrees
     else:
         additional_consumption = 0.0
     
     return additional_consumption
+
 
 # Streamlit app
 def electric_car_consumption_app():
