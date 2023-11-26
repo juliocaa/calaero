@@ -46,7 +46,6 @@ def climate_control_influence(temperature, use_climate_control):
     
     if use_climate_control:
         # Calculate the additional consumption based on the temperature difference from the optimal
-        # It increments 0.7 kWh for each 6 degrees below or above 20°C.
         temperature_difference = abs(temperature - optimal_temperature)
         # Calculate how many 6-degree increments are in the temperature difference
         six_degree_steps = temperature_difference / 6.0
@@ -55,7 +54,6 @@ def climate_control_influence(temperature, use_climate_control):
         additional_consumption = 0.0
     
     return additional_consumption
-
 
 # Streamlit app
 def electric_car_consumption_app():
@@ -89,3 +87,4 @@ def electric_car_consumption_app():
 # Run the app function
 if __name__ == "__main__":
     electric_car_consumption_app()
+
